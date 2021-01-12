@@ -19,7 +19,7 @@ module.exports = {
         {
             resolve: `gatsby-source-wordpress-experimental`,
             options: {
-                url: `http://localhost:4000/wp/graphql`,
+                url: `http://localhost:3000/graphql`,
                 develop: {
                     hardCacheMediaFiles: true,
                 },

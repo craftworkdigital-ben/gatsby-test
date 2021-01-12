@@ -42,7 +42,7 @@ const NewsPage = ({
             ))}
         </ul>
 
-        { data.wpPage?.dynamicContent.flexibleFields?.map((f, i) => (
+        { data.wpPage?.dynamicContent?.flexibleFields?.map((f, i) => (
             <p key={i}>{ f.__typename }</p>
         ))}
     </Layout>
