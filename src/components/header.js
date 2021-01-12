@@ -2,7 +2,7 @@ import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
 
-const Header = ({ siteTitle }) => (
+const Header = ({ menuItems, siteTitle }) => (
   <header
     style={{
       background: `rebeccapurple`,
@@ -27,6 +27,10 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </Link>
       </h1>
+
+      { menuItems.map((m, i) => m.parentId === null ? (
+          <span>{ m.label }</span>
+      ) : null)}
     </div>
   </header>
 )
