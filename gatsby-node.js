@@ -23,7 +23,13 @@ exports.createPages = ({ graphql, actions }) => {
             }   
         }
     `).then(result => {
-        result.data.allWpPage.edges.forEach(({ node }) => {
+        const pages = result.data.allWpPage.edges.filter(p => [
+            // TODO: Add any pages that should have a custom template here
+            '/home/',
+            '/news/',
+        ].includes(p.node.uri) === false)
+
+        pages.forEach(({ node }) => {
             createPage({
                 path: node.uri,
                 component: path.resolve(`./src/templates/page.js`),

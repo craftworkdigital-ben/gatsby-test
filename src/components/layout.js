@@ -42,7 +42,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header menuItems={data.wpMenu.menuItems.nodes} siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <Header menuItems={ data.wpMenu?.menuItems.nodes ?? [] } siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
         style={{
           margin: `0 auto`,

@@ -1,24 +1,7 @@
 import React from "react"
-import Layout from "../components/layout"
 import { graphql } from "gatsby"
 
-export default ({ data }) => {
-    const page = data.wpPage
-    console.log(page)
-
-    return (
-        <Layout>
-            <div>
-                <h1>{page.title}</h1>
-
-                { page.dynamicContent.flexibleFields.map((f, i) => (
-                    <p key={i}>{ f.__typename }</p>
-                ))}
-                
-            </div>
-        </Layout>
-    )
-}
+import Layout from "../components/layout"
 
 export const query = graphql`
     query($slug: String!) {
@@ -40,3 +23,19 @@ export const query = graphql`
         }
     }
 `
+
+export default ({ data }) => {
+    const page = data.wpPage
+
+    return (
+        <Layout>
+            <div>
+                <h1>{page.title}</h1>
+
+                { page.dynamicContent.flexibleFields?.map((f, i) => (
+                    <p key={i}>{ f.__typename }</p>
+                ))}
+            </div>
+        </Layout>
+    )
+}

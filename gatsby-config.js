@@ -8,13 +8,7 @@ module.exports = {
     },
     plugins: [
         `gatsby-plugin-react-helmet`,
-        // `gatsby-plugin-sharp`,
-        {
-            resolve: `gatsby-plugin-sharp`,
-            options: {
-                // failOnError: false,
-            },
-        },
+        `gatsby-plugin-sharp`,
         {
             resolve: `gatsby-source-filesystem`,
             options: {
@@ -30,38 +24,11 @@ module.exports = {
                     hardCacheMediaFiles: true,
                 },
                 verbose: true,
-                // schema: {
-                //     timeout: 100000,
-                // },
-                // html: {
-                //     useGatsbyImage: false,
-                //     createStaticFiles: false,
-                // },
                 excludeFieldNames: [`blocksJSON`, `saveContent`],
                 type: {
                     Post: {
                         // limit: process.env.NODE_ENV === `development` ? 50 : null,
                         limit: 50,
-                    },
-                    MediaItem: {
-                        localFile: {
-                            // excludeByMimeTypes: [`image/svg+xml`],
-                            // maxFileSizeBytes: 0,
-                        },
-                    },
-                    // MediaItem: {
-                    //     exclude: true,
-                    // },
-                    // this shows how to exclude entire types from the schema
-                    // these examples are for wp-graphql-gutenberg
-                    CoreParagraphBlockAttributes: {
-                        exclude: true,
-                    },
-                    CoreParagraphBlockAttributesV2: {
-                        exclude: true,
-                    },
-                    CorePullquoteBlockAttributes: {
-                        exclude: true,
                     },
                 },  
                 

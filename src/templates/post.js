@@ -4,7 +4,6 @@ import { graphql } from "gatsby"
 
 export default ({ data }) => {
     const post = data.wpPost
-    console.log(post)
 
     return (
         <Layout>
