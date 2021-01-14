@@ -15,11 +15,11 @@ export const query = graphql`
                     name
                 }
             }
-            dynamicContent {
-                flexibleFields {
-                    __typename
-                }
-            }
+            # dynamicContent {
+            #     flexibleFields {
+            #         __typename
+            #     }
+            # }
         }
     }
 `
@@ -32,9 +32,9 @@ export default ({ data }) => {
             <div>
                 <h1>{page.title}</h1>
 
-                { page.dynamicContent?.flexibleFields?.map((f, i) => (
+                {/* { page.dynamicContent?.flexibleFields?.map((f, i) => (
                     <p key={i}>{ f.__typename }</p>
-                ))}
+                ))} */}
             </div>
         </Layout>
     )

@@ -1,6 +1,8 @@
 import React from "react"
-import Layout from "../components/layout"
 import { graphql } from "gatsby"
+import Img from "gatsby-image"
+
+import Layout from "../components/layout"
 
 export default ({ data }) => {
     const post = data.wpPost
@@ -8,6 +10,11 @@ export default ({ data }) => {
     return (
         <Layout>
             <div>
+                <Img fluid={post?.featuredImage?.node?.localFile?.childImageSharp?.fluid} />
+
+                {/* <Image />
+                <img src={`http://localhost:3000${post.featuredImage?.node?.mediaItemUrl}`} /> */}
+
                 <h1>{post.title}</h1>
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
                 <p> By: {post.author.node.name} </p>
@@ -31,7 +38,13 @@ export const query = graphql`
             }
             featuredImage {
                 node {
-                    mediaItemUrl
+                    localFile {
+                        childImageSharp {
+                            fluid(maxWidth: 300) {
+                                ...GatsbyImageSharpFluid
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -8,11 +8,11 @@ export const pageQuery = graphql`
     query {
         wpPage (slug: { eq: "news" }) {
             title
-            dynamicContent {
-                flexibleFields {
-                    __typename
-                }
-            }
+            # dynamicContent {
+            #     flexibleFields {
+            #         __typename
+            #     }
+            # }
         }
         allWpPost (sort: { fields: [date] }) {
             edges {
@@ -42,9 +42,9 @@ const NewsPage = ({
             ))}
         </ul>
 
-        { data.wpPage?.dynamicContent?.flexibleFields?.map((f, i) => (
+        {/* { data.wpPage?.dynamicContent?.flexibleFields?.map((f, i) => (
             <p key={i}>{ f.__typename }</p>
-        ))}
+        ))} */}
     </Layout>
 )
 
