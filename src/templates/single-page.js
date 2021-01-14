@@ -4,8 +4,8 @@ import { graphql } from "gatsby"
 import Layout from "../components/layout"
 
 export const query = graphql`
-    query($slug: String!) {
-        wpPage (slug: { eq: $slug }) {
+    query($id: String!) {
+        wpPage (id: { eq: $id }) {
             title
             content
             slug

@@ -2,77 +2,121 @@ const path = require(`path`)
 
 const defaultLanguage = 'en'
 
-const createSlug = (node) => {
-    if (node.language.slug === defaultLanguage) {
-        if (node.isFrontPage) return [ `/`, `/${node.language.slug}/` ]
-        else return [ `/${node.slug}`, `/${node.language.slug}/${node.slug}` ]
-    } else {
-        const defaultPage = node.translations.find(t => t.language.slug === defaultLanguage)
+const getHomepagePaths = (node) => ([
+    { id: node?.id, url: `/`, locale: defaultLanguage },
+    { id: node?.id, url: `/${defaultLanguage}`, locale: defaultLanguage },
+    ...node?.translations?.map(t => ({
+        id: t.id,
+        url: `/${t?.language?.slug}`,
+        locale: t?.language?.slug,
+    })),
+])
 
-        if (defaultPage) {
-            if (defaultPage.isFrontPage) return [ `/${node.language.slug}/` ]
-            else return [ `/${node.language.slug}/${defaultPage.slug}` ]
-        } else {
-            return [ `/${node.language.slug}/${node.slug}` ]
-        }
-    }
-}
+const getSettingsPagePaths = (node) => ([
+    { id: node?.id, url: `/${node?.slug}`, locale: defaultLanguage },
+    { id: node?.id, url: `/${defaultLanguage}/${node?.slug}`, locale: defaultLanguage },
+    ...node?.translations?.map(t => ({
+        id: t.id,
+        url: `/${t?.language?.slug}/${node?.slug}`,
+        locale: t?.language?.slug,
+    })),
+])
+
+const getDynamicPagePaths = (node) => node?.language?.slug === defaultLanguage ? [
+    { id: node?.id, url: `/${node?.slug}`, locale: defaultLanguage },
+    { id: node?.id, url: `/${defaultLanguage}/${node?.slug}`, locale: defaultLanguage },
+] : [ 
+    { id: node?.id, url: `/${node?.language?.slug}/${node?.slug}`, locale: node?.language?.slug },
+]
+
+const getPostPaths = (node) => node?.language?.slug === defaultLanguage ? [
+    { id: node?.id, url: `/${defaultLanguage}${node?.uri}`, locale: defaultLanguage },
+    { id: node?.id, url: node?.uri, locale: node?.language?.uri },
+] : [
+    { id: node?.id, url: node?.uri, locale: node?.language?.uri },
+]
 
 exports.createPages = ({ graphql, actions }) => {
     const { createPage } = actions
 
     return graphql(`
-        {
-            allWpPage {
-                edges {
-                    node {
-                        uri
-                        slug
-                        isFrontPage
-                        language {
-                            slug
-                        }
-                        translations {
-                            slug
-                            isFrontPage
-                            language {
-                                slug
-                            }
+        fragment settingsPage on WpPage  {
+            id
+            slug
+            translations {
+                id
+                language {
+                    slug
+                }
+            }
+        }
+
+        query {
+            wp {
+                siteSettings {
+                    options {
+                        pages {
+                            homepage { ...settingsPage }
+                            newsPage { ...settingsPage }
                         }
                     }
                 }
             }
+
+            allWpPage {
+                nodes {
+                    id
+                    slug
+                    language {
+                        slug
+                    }
+                }
+            }
             allWpPost {
-                edges {
-                    node {
-                        uri
+                nodes {
+                    id
+                    uri
+                    language {
                         slug
                     }
                 }
             }   
         }
-    `).then(result => {
-        result.data.allWpPage.edges.forEach(({ node }) => {
-            const slugs = createSlug(node)
+    `).then(({ data }) => {
+        const homepages = getHomepagePaths(data.wp?.siteSettings?.options?.pages?.homepage)
+        const newspages = getSettingsPagePaths(data.wp?.siteSettings?.options?.pages?.newsPage)
 
-            slugs.forEach(p => {
-                createPage({
-                    path: p,
-                    component: path.resolve(`./src/templates/page.js`),
-                    context: {
-                        slug: node.slug,
-                    },
-                })
+        const otherpages = data.allWpPage.nodes.filter(p => [
+            ...homepages.map(p => p.id),
+            ...newspages.map(p => p.id),
+        ].includes(p?.id) === false).map(p => getDynamicPagePaths(p)).reduce((a, b) => [ ...a, ...b ], [])
+
+        const pages = [ ...homepages, ...otherpages ]
+
+        const posts = data.allWpPost.nodes.map(p => getPostPaths(p)).reduce((a, b) => [ ...a, ...b ], [])
+
+        pages.forEach(({ id, url, locale }) => {
+            createPage({
+                path: url,
+                component: path.resolve(`./src/templates/single-page.js`),
+                context: { id },
             })
         })
 
-        result.data.allWpPost.edges.forEach(({ node }) => {
+        newspages.forEach(({ id, url, locale }) => {
             createPage({
-                path: node.uri,
-                component: path.resolve(`./src/templates/post.js`),
-                context: {
-                    slug: node.slug,
-                },
+                path: url,
+                component: path.resolve(`./src/templates/archive-post.js`),
+                context: { id, locale },
+            })
+        })
+        
+        posts.forEach(({ id, url, locale }) => {
+            console.log(url)
+            createPage({
+                path: url,
+                component: path.resolve(`./src/templates/single-post.js`),
+                context: { id },
             })
         })
     })

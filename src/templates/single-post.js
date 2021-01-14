@@ -25,8 +25,8 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-    query($slug: String!) {
-        wpPost (slug: { eq: $slug }) {
+    query($id: String!) {
+        wpPost (id: { eq: $id }) {
             title
             content
             slug
