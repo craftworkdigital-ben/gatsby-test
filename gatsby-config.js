@@ -1,4 +1,4 @@
-require("dotenv").config({ path: `.env` })
+require('dotenv').config({ path: `.env` })
 
 module.exports = {
     siteMetadata: {
@@ -48,7 +48,7 @@ module.exports = {
         //     },
         // },
         {
-            resolve: "gatsby-plugin-react-svg",
+            resolve: 'gatsby-plugin-react-svg',
             options: {
                 rule: {
                     include: /\.inline\.svg$/, // See below to configure properly

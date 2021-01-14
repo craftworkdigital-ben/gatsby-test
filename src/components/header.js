@@ -1,5 +1,5 @@
-import React from "react"
-import { Link } from "gatsby"
+import React from 'react'
+import { Link } from 'gatsby'
 
 const Header = ({ menuItems, siteTitle }) => (
     <header
@@ -28,7 +28,7 @@ const Header = ({ menuItems, siteTitle }) => (
             </h1>
 
             { menuItems.map((m, i) => m.parentId === null ? (
-                <Link key={i} to={ m.path === '/home/' ? '/' : m.path }>{ m.label }</Link>
+                <Link key={i} to={ m.path === `/home/` ? `/` : m.path }>{ m.label }</Link>
             ) : null)}
         </div>
     </header>
