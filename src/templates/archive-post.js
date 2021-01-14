@@ -22,7 +22,7 @@ export const query = graphql`
             # }
         }
 
-        allWpPost(filter:{ language:{ slug:{ eq: $locale }}}) {
+        allWpPost(filter:{ language:{ slug:{ eq: $locale }}} sort: { fields: [date] }) {
             nodes {
                 uri
                 title
